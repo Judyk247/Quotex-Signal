@@ -1,0 +1,9 @@
+flask==2.3.3
+websocket-client==1.6.3
+requests==2.31.0
+eventlet==0.33.3
+python-dotenv==1.0.0
+pandas==2.0.3
+numpy==1.24.3
+# TA-Lib is optional; your base_strategy already includes a pure-Python fallback.
+# If you want TA-Lib, you'll need the C library – see build.sh below.
