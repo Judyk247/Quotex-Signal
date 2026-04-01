@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quotex Signals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0c1222 100%);
+            color: #eef2ff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: 0.85rem;
+            color: #8b9bcf;
+            margin-top: 4px;
+        }
+
+        /* Main Signal Card */
+        .signal-card {
+            background: rgba(18, 25, 45, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        .pair {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #b9c8ff;
+            margin-bottom: 16px;
+        }
+        .signal-direction {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 16px 0 12px;
+            text-transform: uppercase;
+        }
+        .signal-up {
+            color: #10b981;
+            text-shadow: 0 0 10px rgba(16,185,129,0.3);
+        }
+        .signal-down {
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239,68,68,0.3);
+        }
+        .confidence {
+            font-size: 1rem;
+            background: rgba(0,0,0,0.4);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            margin-top: 8px;
+        }
+        .timeframe {
+            font-size: 0.85rem;
+            color: #94a3d8;
+            margin-top: 12px;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .info-card {
+            flex: 1;
+            background: rgba(18, 25, 45, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .info-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8b9bcf;
+            margin-bottom: 12px;
+        }
+        .indicators-list {
+            list-style: none;
+        }
+        .indicators-list li {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 6px;
+            height: 6px;
+            background: #3b82f6;
+            border-radius: 50%;
+        }
+        .analysis-text {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #cbd5ff;
+        }
+
+        /* Recent Signals Table */
+        .recent-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .signals-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(18, 25, 45, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+        .signals-table th,
+        .signals-table td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .signals-table th {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #8b9bcf;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .signals-table td {
+            font-size: 0.85rem;
+        }
+        .signal-up-badge {
+            color: #10b981;
+            font-weight: 600;
+        }
+        .signal-down-badge {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        /* Footer Button */
+        .footer-btn {
+            margin-top: 24px;
+            text-align: center;
+        }
+        .back-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 10px 24px;
+            font-size: 0.85rem;
+            color: #b9c8ff;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .back-btn.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #8b9bcf;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>QUOTEX SIGNALS</h1>
+        <p>AI‑powered trading signals · real‑time analysis</p>
+    </div>
+
+    <div id="signalCard" class="signal-card">
+        <div class="pair" id="pair">Loading...</div>
+        <div class="badge" id="liveBadge">Live Signal</div>
+        <div class="signal-direction" id="direction">—</div>
+        <div class="confidence" id="confidence">Confidence: --%</div>
+        <div class="timeframe" id="timeframe">Timeframe: --</div>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="info-title">Active indicators</div>
+            <ul class="indicators-list">
+                <li><span class="indicator-dot"></span> Alligator (Jaw/Teeth/Lips)</li>
+                <li><span class="indicator-dot"></span> EMA‑150</li>
+                <li><span class="indicator-dot"></span> Stochastic (14,3,3)</li>
+                <li><span class="indicator-dot"></span> Fractals</li>
+                <li><span class="indicator-dot"></span> ATR (volatility)</li>
+                <li><span class="indicator-dot"></span> 3‑Candle Patterns</li>
+            </ul>
+        </div>
+        <div class="info-card">
+            <div class="info-title">Base analysis</div>
+            <div class="analysis-text" id="analysisText">
+                Waiting for analysis...
+            </div>
+        </div>
+    </div>
+
+    <div class="recent-title">
+        <span>📊 Recent signals</span>
+    </div>
+    <div id="recentContainer">
+        <table class="signals-table">
+            <thead>
+                <tr><th>Time</th><th>Pair</th><th>Signal</th><th>Conf.</th><th>Type</th>  </tr>
+            </thead>
+            <tbody id="signalsBody">
+                <tr><td colspan="5" class="loading">Loading signals...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer-btn">
+        <div class="back-btn locked">Back to Pairs (Locked)</div>
+    </div>
+</div>
+
+<script>
+    // You can change this label to match your actual timeframe (e.g., "5m", "1m", etc.)
+    const TIMEFRAME_LABEL = "5s Frame";
+
+    function updateLatestSignal(signal) {
+        if (!signal || !signal.asset) {
+            document.getElementById('pair').innerText = 'No signal yet';
+            document.getElementById('direction').innerHTML = '—';
+            document.getElementById('confidence').innerText = 'Confidence: --%';
+            document.getElementById('analysisText').innerHTML = 'Waiting for market data...';
+            return;
+        }
+
+        document.getElementById('pair').innerText = signal.asset + ' (OTC)';
+        const directionEl = document.getElementById('direction');
+        const direction = signal.direction === 'call' ? 'UP' : 'DOWN';
+        directionEl.innerText = direction;
+        directionEl.className = `signal-direction ${direction === 'UP' ? 'signal-up' : 'signal-down'}`;
+
+        document.getElementById('confidence').innerHTML = `Confidence: ${signal.confidence || 0}%`;
+        document.getElementById('timeframe').innerHTML = `Timeframe: ${TIMEFRAME_LABEL}`;
+
+        // Update base analysis text
+        let analysisMsg = `Signal generated: ${direction} with ${signal.confidence}% confidence. `;
+        if (signal.type === 'reversal') {
+            analysisMsg += 'Reversal pattern detected at fractal support/resistance.';
+        } else if (signal.type === 'trend') {
+            analysisMsg += 'Trend‑following signal confirmed by Alligator alignment.';
+        } else {
+            analysisMsg += 'Strategy conditions met.';
+        }
+        document.getElementById('analysisText').innerHTML = analysisMsg;
+    }
+
+    function updateSignalsList(signals) {
+        const tbody = document.getElementById('signalsBody');
+        if (!signals || signals.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="loading">No signals yet</td></tr>';
+            return;
+        }
+        tbody.innerHTML = '';
+        // Show last 10 signals in reverse order (newest first)
+        signals.slice(-10).reverse().forEach(sig => {
+            const row = tbody.insertRow();
+            const timeCell = row.insertCell(0);
+            const pairCell = row.insertCell(1);
+            const signalCell = row.insertCell(2);
+            const confCell = row.insertCell(3);
+            const typeCell = row.insertCell(4);
+
+            timeCell.innerText = new Date(sig.timestamp).toLocaleTimeString();
+            pairCell.innerText = sig.asset;
+            const direction = sig.direction === 'call' ? 'UP' : 'DOWN';
+            signalCell.innerText = direction;
+            signalCell.className = direction === 'UP' ? 'signal-up-badge' : 'signal-down-badge';
+            confCell.innerText = `${sig.confidence || 0}%`;
+            typeCell.innerText = sig.type || '—';
+        });
+    }
+
+    function fetchLatest() {
+        fetch('/api/latest')
+            .then(res => res.json())
+            .then(data => updateLatestSignal(data))
+            .catch(err => console.error('Error fetching latest:', err));
+    }
+
+    function fetchSignals() {
+        fetch('/api/signals')
+            .then(res => res.json())
+            .then(data => updateSignalsList(data))
+            .catch(err => console.error('Error fetching signals:', err));
+    }
+
+    fetchLatest();
+    fetchSignals();
+    setInterval(fetchLatest, 2000);
+    setInterval(fetchSignals, 5000);
+</script>
+</body>
+  </html>
